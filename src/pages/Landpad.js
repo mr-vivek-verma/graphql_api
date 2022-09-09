@@ -1,17 +1,22 @@
 
-import React, { useEffect, useState } from "react";
-const LAUNCH_QUERY =`
+import React from "react";
+import { useQuery, gql} from "@apollo/client";
+import { Query } from "react-apollo";
+import "../index.css";
+import NEW_QUERY from "../components/query";
+
+const LAUNCH_QUERY = gql`
 {
     landpads(limit: 10) {
       details
       full_name
-      id
-      landing_type
-      location {
+      id   
+      landing_type  
+      location {     
         latitude
-        longitude
+        longitude         
         name
-        region
+        region    
       }
     }
   }
@@ -22,26 +27,43 @@ const LAUNCH_QUERY =`
 `
 
 const LandPad = () => {
-    const [landPad, setLandPad] = useState([])
-    useEffect(() => {
-    fetch("https://api.spacex.land/graphql/",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({query: LAUNCH_QUERY})
-    }).then(Response => Response.json())
-    .then(data => setLandPad(data.data.landpads))
-    
-    }, [])
+   
+
+
+    const {data, loading, error } = useQuery(LAUNCH_QUERY);
+
+    if (loading) return "Loading...";
+    if (error) return <pre>{error.message}</pre>
     return (
       <div>
       <h1>landPad</h1>
-      <ul>
-        {landPad.map(landPad =>(
-          <li key={landPad.id}>{landPad.details}</li>
+      <div>
+        {data.landpads.map(landPad =>(
+          <div className="card">
+          <p key={landPad.id}>{landPad.details}</p>
+          </div>
         ))}
-      </ul>
       </div>
-    );
+      </div> 
+//     <div query={NEW_QUERY}>
+//     {({ loading, error, data }) => {
+//       if (loading) return <div>Fetching data.....</div>;
+//       if (error) return <div>Error fetching data..</div>;
+//       return (
+//         <div>
+//        <h1>landPad</h1>
+//        <div>
+//          {data.landpads.map(landPad =>(
+//            <div className="card">
+//            <p key={landPad.id}>{landPad.details}</p>
+//            </div>
+//             ))}
+//          </div>
+//          </div> 
+//       );
+//     }}
+//   </div>
+    ); 
 }
 
 export default LandPad
