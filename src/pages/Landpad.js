@@ -1,9 +1,8 @@
 
 import React from "react";
 import { useQuery, gql} from "@apollo/client";
-import { Query } from "react-apollo";
 import "../index.css";
-import NEW_QUERY from "../components/query";
+
 
 const LAUNCH_QUERY = gql`
 {
